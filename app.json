@@ -1,0 +1,19 @@
+{
+    "id": "41315b7b-6c01-4ede-8201-2c3927404e41",
+    "version": "0.0.1",
+    "requiredApiVersion": "^1.4.0",
+    "iconFile": "icon.png",
+    "author": {
+        "name": "Pavel Khorikov",
+        "homepage": "https://github.com/JargeZ/RocketChat.Apps.BotBridge",
+        "support": "https://github.com/JargeZ/RocketChat.Apps.BotBridge/issues"
+    },
+    "name": "BotBridge",
+    "nameSlug": "bbot",
+    "classFile": "BotBridgeApp.ts",
+    "description": "Provides simple api for build bots witch interactive UIKit elements",
+    "implements": [
+        "IPostMessageSent",
+        "IUIKitInteractionHandler"
+    ]
+}

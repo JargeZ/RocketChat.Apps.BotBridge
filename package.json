@@ -1,0 +1,17 @@
+{
+    "devDependencies": {
+        "@rocket.chat/apps-engine": "^1.19.0",
+        "@types/node": "14.14.6",
+        "tslint": "^5.10.0",
+        "typescript": "^4.0.5"
+    },
+    "scripts": {
+        "local_deploy": "rc-apps deploy --url=http://localhost:3000 --username=admin --password=lalaka228 ",
+        "local_update": "rc-apps deploy --url=http://localhost:3000 --username=admin --password=lalaka228 --update",
+        "deploy": "sh deploy.sh",
+        "update": "sh deploy.sh --update"
+    },
+    "dependencies": {
+        "chokidar": "^3.4.3"
+    }
+}
