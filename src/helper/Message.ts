@@ -1,8 +1,9 @@
 import { IMessageBuilder, IModify, IRead } from '@rocket.chat/apps-engine/definition/accessors';
+import {IMessage} from '@rocket.chat/apps-engine/definition/messages';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { BlockBuilder, ButtonStyle, IBlockElement, IButtonElement } from '@rocket.chat/apps-engine/definition/uikit';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
-import { IButton } from '../IBackendReques.daun';
+import {IButton, IFromBackendRequestSendMessage} from '../IBackendReques.daun';
 
 function buildButton(block: BlockBuilder, button: IButton): IButtonElement {
     return block.newButtonElement({
@@ -13,17 +14,18 @@ function buildButton(block: BlockBuilder, button: IButton): IButtonElement {
     });
 }
 
-export const createMessage = async (toRoom: Partial<IRoom>,
-                                    senderUsername: string | undefined,
+export const createMessage = async (senderUsername: string | undefined,
                                     read: IRead,
                                     modify: IModify,
-                                    message: {text: string| undefined, buttons: Array<IButton>|undefined}): Promise<any> => {
+                                    message: Partial<IMessage>,
+                                    buttons: Array<IButton>): Promise<any> => {
 
+    const targetRoom = message.room;
     let room: IRoom | undefined;
-    if (toRoom?.id) {
-        room = await read.getRoomReader().getById(toRoom.id);
-    } else if (toRoom?.slugifiedName) {
-        room = await read.getRoomReader().getByName(toRoom.slugifiedName);
+    if (targetRoom?.id) {
+        room = await read.getRoomReader().getById(targetRoom.id);
+    } else if (targetRoom?.slugifiedName) {
+        room = await read.getRoomReader().getByName(targetRoom.slugifiedName);
     } else {
         throw new Error('Can\'t indentify target room');
     }
@@ -42,14 +44,16 @@ export const createMessage = async (toRoom: Partial<IRoom>,
         throw new Error('Can\'t indentify sender');
     }
 
-    const { text, buttons } = message;
     console.log('message ---', message);
 
-    if (text) {
+    if (message.text) {
         const textMessage = modify.getCreator().startMessage();
         textMessage.setRoom(room);
         textMessage.setSender(sender);
-        textMessage.setText(text);
+        textMessage.setText(message.text);
+        if (message.attachments) {
+            textMessage.setAttachments(message.attachments);
+        }
         await modify.getCreator().finish(textMessage);
     }
 

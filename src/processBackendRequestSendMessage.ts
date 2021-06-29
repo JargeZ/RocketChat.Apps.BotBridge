@@ -69,76 +69,20 @@ export async function processBackendRequestSendMessage_test(request: IBackendReq
     await modify.getCreator().finish(message);
 }
 
-export const processBackendRequestSendMessage = async (request: IBackendRequest, read: IRead, http: IHttp, persistence: IPersistence, modify: IModify) => {
+export const processBackendRequestSendMessage = async (request: IBackendRequest,
+                                                       read: IRead,
+                                                       http: IHttp,
+                                                       persistence: IPersistence,
+                                                       modify: IModify) => {
     const payload = request.payload as IFromBackendRequestSendMessage;
 
     if (!payload.message.room) {
         return;
     }
 
-    await createMessage(payload.message.room,
-        request.bot?.username,
-        read, modify, {
-            text: payload.message.text,
-            buttons: payload.buttons,
-        });
-    // const message = modify.getCreator().startMessage();
-    // const block = modify.getCreator().getBlockBuilder();
-    // const blockElements: Array<IBlockElement> = [];
-    // const firbutton = block.newButtonElement({
-    //     actionId: 'push-bot-button',
-    //     style: ButtonStyle.PRIMARY,
-    //     text: block.newPlainTextObject('Button text'),
-    //     value: 'button-text-action',
-    // });
-    // block.addActionsBlock({
-    //     elements: [
-    //         {
-    //             type: BlockElementType.BUTTON,
-    //             text: {
-    //                 type: TextObjectType.PLAINTEXT,
-    //                 text: 'test value ADDA',
-    //             },
-    //             value: 'ADDA',
-    //             actionId: 'push-bot-button',
-    //         } as IButtonElement,
-    //         firbutton,
-    //     ],
-    // });
-
-    // let sender: IUser | undefined;
-    // if (request.bot?.username) {
-    //     sender = await read.getUserReader().getByUsername(request.bot.username);
-    // }
-    // let room: IRoom | undefined;
-    // if (payload.message.room?.id) {
-    //     room = await read.getRoomReader().getById(payload.message.room.id);
-    // } else if (payload.message.room?.slugifiedName) {
-    //     room = await read.getRoomReader().getByName(payload.message.room.slugifiedName);
-    // } else {
-    //     throw new Error('Can\'t indentify target room');
-    // }
-    // if (!room) {
-    //     throw new Error('Can\'t indentify target room');
-    // }
-    // if (!sender) {
-    //     throw new Error('Can\'t indentify sender');
-    // }
-
-    // if (payload.message.text) {
-    //     message.setRoom(room);
-    //     message.setSender(sender);
-    //     message.setText(payload.message.text || '');
-
-    // }
-    // await modify.getCreator().finish(message);
-
-    // if (payload.buttons) {
-    //     const interactive_message = modify.getCreator().startMessage();
-    //     const buttons = payload.buttons.map((button) => buildButton(block, button));
-    //     blockElements.push(...buttons);
-    //     block.addActionsBlock({ elements: blockElements });
-    //     interactive_message.setBlocks(block);
-    // }
-
+    await createMessage(request.bot?.username,
+                        read,
+                        modify,
+                        payload.message,
+                        payload.buttons);
 };
